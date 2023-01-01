@@ -14,9 +14,15 @@ public class TowerAttack : MonoBehaviour
     [SerializeField] private float AtkRate = 0.5f; // 공격 속도
     [SerializeField] private float AtkRange = 2f; // 공격범위
     [SerializeField] private int AtkDamage = 1; // 공격력
+    int level = 0; // 타워 레벨
     FireState fireState = FireState.SearchTarget; // 타워 총구의 상태
     Transform target = null;
     EnemyController enemyController; // 적 정보
+
+    public float Damage => AtkDamage;
+    public float Rate => AtkRate;
+    public float Range => AtkRange;
+    public int Level => level + 1;
 
     public void Setup(EnemyController enemyCtr)
     {

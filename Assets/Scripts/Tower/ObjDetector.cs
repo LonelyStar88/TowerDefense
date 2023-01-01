@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObjDetector : MonoBehaviour
 {
     [SerializeField] private TowerController towerController;
+    [SerializeField] private TowerDataUI towerDataviewer;
 
     private Camera maincamera;
     private Ray ray;
@@ -35,6 +36,11 @@ public class ObjDetector : MonoBehaviour
                 if(hit.transform.CompareTag("Tile"))
                 {
                     towerController.TowerSpawn(hit.transform);
+                }
+                // 타워를 선택하면 해당 타워 정보를 출력하는 타워 정보창 On
+                else if(hit.transform.CompareTag("Tower"))
+                {
+                    towerDataviewer.OnPanel(hit.transform);
                 }
             }
         }

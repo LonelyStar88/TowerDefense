@@ -32,7 +32,8 @@ public class TowerController : MonoBehaviour
             //타워 건설에 필요한 골드만큼 감소
             playerGold.CurGold -= towerBuildgold;
             // 선택한 타일의 위치에 타워 생성
-            GameObject obj = Instantiate(tower, towertiletrans.position, Quaternion.identity); //타워 생성을 Tilemap에 깔아둔 TowerTile에만 설치할수있도록 제어
+            Vector3 Pos = towertiletrans.position + Vector3.back; // 이후 타워의 정보를 보기위해 클릭하면 타워가 우선선택이 될수있도록 z축보다 -1로 설정
+            GameObject obj = Instantiate(tower, Pos, Quaternion.identity); //타워 생성을 Tilemap에 깔아둔 TowerTile에만 설치할수있도록 제어
             // 타워 무기에 적 정보 전달
             obj.GetComponent<TowerAttack>().Setup(enemyController);
         }
