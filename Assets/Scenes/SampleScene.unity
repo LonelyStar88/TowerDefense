@@ -7878,6 +7878,7 @@ MonoBehaviour:
   RangeTxt: {fileID: 2111546090}
   LVTxt: {fileID: 11610946}
   towerAttackRange: {fileID: 101816414}
+  upgradeBtn: {fileID: 0}
 --- !u!4 &1429788596 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6279932582789224440, guid: 0ecb8863823da924a9cfcead63dcc11c, type: 3}
@@ -9081,9 +9082,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80a23e1f9c81b6d4791f48b145e7c957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 2299811384236490380, guid: 0707fd7e1327479498152f3450e6798a, type: 3}
+  towerTemp: {fileID: 11400000, guid: 78b647ec01b88ab49b9cf3de4ce3eca4, type: 2}
   enemyController: {fileID: 288184759}
-  towerBuildgold: 50
   playerGold: {fileID: 318852888}
 --- !u!4 &1654701130
 Transform:

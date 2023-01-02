@@ -6,9 +6,9 @@ public class Bullet : MonoBehaviour
 {
     private Movement2D movement2D;
     private Transform target;
-    private int damage;
+    private float damage;
 
-    public void Setup(Transform target, int dam)
+    public void Setup(Transform target, float dam)
     {
         movement2D = GetComponent<Movement2D>();
         this.target = target;

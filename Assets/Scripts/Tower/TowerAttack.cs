@@ -9,24 +9,32 @@ public enum FireState
 }
 public class TowerAttack : MonoBehaviour
 {
+    [SerializeField] private TowerAssetData towerTemp; // 타워 정보(Status)
     [SerializeField] private GameObject Bullet; //Bullet프리팹
     [SerializeField] private Transform spawnPoint; // Bullet 생성위치
-    [SerializeField] private float AtkRate = 0.5f; // 공격 속도
-    [SerializeField] private float AtkRange = 2f; // 공격범위
-    [SerializeField] private int AtkDamage = 1; // 공격력
+    //[SerializeField] private float AtkRate = 0.5f; // 공격 속도
+    //[SerializeField] private float AtkRange = 2f; // 공격범위
+    //[SerializeField] private int AtkDamage = 1; // 공격력
     int level = 0; // 타워 레벨
     FireState fireState = FireState.SearchTarget; // 타워 총구의 상태
     Transform target = null;
     EnemyController enemyController; // 적 정보
 
-    public float Damage => AtkDamage;
-    public float Rate => AtkRate;
-    public float Range => AtkRange;
-    public int Level => level + 1;
+    SpriteRenderer spriteRenderer; // 타워 이미지 변경을 위한 변수
+    PlayerGold playerGold; // 플레이어의 골드 정보 Get,Set
 
-    public void Setup(EnemyController enemyCtr)
+    public Sprite TowerImg => towerTemp.weapons[level].sprite;
+    public float Damage => towerTemp.weapons[level].damage;
+    public float Rate => towerTemp.weapons[level].rate;
+    public float Range => towerTemp.weapons[level].range;
+    public int Level => level + 1;
+    public int MaxLevel => towerTemp.weapons.Length;
+
+    public void Setup(EnemyController enemyCtr, PlayerGold gold)
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         this.enemyController = enemyCtr;
+        this.playerGold = gold;
 
         Changestate(FireState.SearchTarget);
     }
@@ -74,7 +82,7 @@ public class TowerAttack : MonoBehaviour
             {
                 float dis = Vector3.Distance(enemyController.EnemyList[i].transform.position, transform.position);
                 // 현재 검사중인 적과의 거리가 공격범위 내에 있고, 현재까지 검사한 적보다 가까울 경우 => 타겟 변경
-                if(dis <= AtkRange && dis <= enemydis)
+                if(dis <= towerTemp.weapons[level].range && dis <= enemydis)
                 {
                     enemydis = dis;
                     target = enemyController.EnemyList[i].transform; 
@@ -103,7 +111,7 @@ public class TowerAttack : MonoBehaviour
 
             // target이 공격 범위 안에 있는지 검사(공격 범위를 벗어나면 새로운 적 탐색)
             float dis = Vector3.Distance(target.position, transform.position);
-            if(dis > AtkRange)
+            if(dis > towerTemp.weapons[level].range)
             {
                 target = null;
                 Changestate(FireState.SearchTarget);
@@ -111,7 +119,7 @@ public class TowerAttack : MonoBehaviour
             }
 
             // 공격 속도만큼 딜레이
-            yield return new WaitForSeconds(AtkRate);
+            yield return new WaitForSeconds(towerTemp.weapons[level].rate);
 
             // 공격 (Bullet 생성)
             CreateBullet();
@@ -121,6 +129,24 @@ public class TowerAttack : MonoBehaviour
     void CreateBullet()
     {
        GameObject obj =  Instantiate(Bullet, spawnPoint.position, Quaternion.identity); //현재 spawnPoint의 위치에서 Bullet 생성
-       obj.GetComponent<Bullet>().Setup(target, AtkDamage); // 탄환에게 target 정보 제공
+       obj.GetComponent<Bullet>().Setup(target, towerTemp.weapons[level].damage); // 탄환에게 target 정보 제공
+    }
+
+    public bool Upgrade()
+    {
+        // 타워 업그레이드에 필요한 골드가 충분한지 검사
+        if(playerGold.CurGold < towerTemp.weapons[level+1].cost)
+        {
+            return false;
+        }
+
+        // 타워 레벨 증가
+        level++;
+        // 타워 외형 변경
+        spriteRenderer.sprite = towerTemp.weapons[level].sprite;
+        // 골드 차감
+        playerGold.CurGold -= towerTemp.weapons[level].cost;
+
+        return true;
     }
 }

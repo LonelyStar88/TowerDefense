@@ -47,11 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bc359626faf277459b3bd11fbba1ac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  towerTemp: {fileID: 11400000, guid: 78b647ec01b88ab49b9cf3de4ce3eca4, type: 2}
   Bullet: {fileID: 6712308648517057179, guid: 57ceeaaef4134cc4680136f2dd3c89dd, type: 3}
   spawnPoint: {fileID: 7454994759444252042}
-  AtkRate: 0.5
-  AtkRange: 2
-  AtkDamage: 1
 --- !u!212 &2370849194573831305
 SpriteRenderer:
   m_ObjectHideFlags: 0
