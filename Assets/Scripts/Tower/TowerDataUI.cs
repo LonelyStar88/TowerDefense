@@ -13,21 +13,32 @@ public class TowerDataUI : MonoBehaviour
     [SerializeField] private TMP_Text LVTxt;
     [SerializeField] private TowerAtkRange towerAttackRange;
     [SerializeField] private Button upgradeBtn;
+    [SerializeField] private TMP_Text ErrorTxt;
 
     TowerAttack currentTower;
+    bool isTxtPrint;
+    float Cooldowntime = 0f; //클릭 남발과 에러메세지가 동시에 호출되는 것을 막기 위해 3초의 쿨다운을 부여
     // Start is called before the first frame update
     void Start()
     {
         OffPanel();
+        isTxtPrint = false;
+        ErrorTxt.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Cooldowntime += Time.deltaTime;
         //클릭하면 타워정보 열림, ESC 누르면 타워정보 닫힘
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             OffPanel();
+        }
+
+        if(isTxtPrint)
+        {
+            Cooldowntime = 0f;
         }
     }
 
@@ -59,6 +70,17 @@ public class TowerDataUI : MonoBehaviour
         upgradeBtn.interactable = currentTower.Level < currentTower.MaxLevel ? true : false; // 3항식으로 조건이 참이면 upgradeBtn.interactable에 true를,
                                                                                              // 거짓이면 false를 저장 
     }
+
+    IEnumerator ErrorTextPrint()
+    {
+        if (isTxtPrint)
+        {
+            ErrorTxt.gameObject.SetActive(true);
+            yield return new WaitForSeconds(3f);
+            ErrorTxt.gameObject.SetActive(false);
+            isTxtPrint = false;
+        }
+    }
     public void OnClickTowerUpgrade()
     {
         // 타워 업그레이드 시도(true - 성공, false, 실패)
@@ -73,7 +95,19 @@ public class TowerDataUI : MonoBehaviour
         }
         else
         {
-            // 비용 부족
+            if (Cooldowntime > 3f)
+            {
+                isTxtPrint = true;
+                // 비용 부족
+                StartCoroutine("ErrorTextPrint");
+            }
         }
+    }
+    public void OnClickTowerSell()
+    {
+        // 타워 판매
+        currentTower.Sell();
+        // 선택한 타워가 사라져서 Panel, 공격범위 off
+        OffPanel();
     }
 }

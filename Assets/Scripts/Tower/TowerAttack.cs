@@ -22,6 +22,7 @@ public class TowerAttack : MonoBehaviour
 
     SpriteRenderer spriteRenderer; // 타워 이미지 변경을 위한 변수
     PlayerGold playerGold; // 플레이어의 골드 정보 Get,Set
+    Tile ownerTile; // 현재 타워가 건설되어 있는 타일
 
     public Sprite TowerImg => towerTemp.weapons[level].sprite;
     public float Damage => towerTemp.weapons[level].damage;
@@ -30,11 +31,12 @@ public class TowerAttack : MonoBehaviour
     public int Level => level + 1;
     public int MaxLevel => towerTemp.weapons.Length;
 
-    public void Setup(EnemyController enemyCtr, PlayerGold gold)
+    public void Setup(EnemyController enemyCtr, PlayerGold gold, Tile tile)
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         this.enemyController = enemyCtr;
         this.playerGold = gold;
+        this.ownerTile = tile;
 
         Changestate(FireState.SearchTarget);
     }
@@ -148,5 +150,15 @@ public class TowerAttack : MonoBehaviour
         playerGold.CurGold -= towerTemp.weapons[level].cost;
 
         return true;
+    }
+
+    public void Sell()
+    {
+        // 골드 증가
+        playerGold.CurGold += towerTemp.weapons[level].sell;
+        // 현재 타일에 다시 타워건설이 가능하도록 변경
+        ownerTile.isBuildTower = false;
+        // 타워 파괴
+        Destroy(gameObject);
     }
 }

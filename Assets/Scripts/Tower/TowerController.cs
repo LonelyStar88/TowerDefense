@@ -37,7 +37,7 @@ public class TowerController : MonoBehaviour
             Vector3 Pos = towertiletrans.position + Vector3.back; // 이후 타워의 정보를 보기위해 클릭하면 타워가 우선선택이 될수있도록 z축보다 -1로 설정
             GameObject obj = Instantiate(towerTemp.tower , Pos, Quaternion.identity); //타워 생성을 Tilemap에 깔아둔 TowerTile에만 설치할수있도록 제어
             // 타워 무기에 적 정보 전달
-            obj.GetComponent<TowerAttack>().Setup(enemyController, playerGold); //타워 업그레이드시에 필요한 골드보유량 검사 및
+            obj.GetComponent<TowerAttack>().Setup(enemyController, playerGold, tile); //타워 업그레이드시에 필요한 골드보유량 검사 및
                                                                                 //업그레이드 가능시 골드 차감을 위해 플레이어의 골드 정보가 필요
         }
     }
