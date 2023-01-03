@@ -38,13 +38,17 @@ public class PlayerHP : MonoBehaviour
 
     public void Damaged(float damage)
     {
-        curHP -= damage;
-
-        StopCoroutine("HitAlphaAnimation");
-        StartCoroutine("HitAlphaAnimation");
-        // 체력 0 이하면 GameOver
-        if(curHP <= 0)
+        if (curHP >= 0)
         {
+            curHP -= damage;
+
+            StopCoroutine("HitAlphaAnimation");
+            StartCoroutine("HitAlphaAnimation");
+        }
+        // 체력 0 이하면 GameOver
+        else
+        {
+            curHP = 0;
             isGameOver = true;
             GameOverTxt.gameObject.SetActive(true);
             if (delayTime > 2f)
